@@ -1,0 +1,16 @@
+.page {
+  font-family: 'Inter', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: #000000;
+  min-width: 320px;
+  padding-top: 45px;
+  padding-bottom: 60px;
+  position: relative;
+}
+
+@media screen and (max-width: 601px) {
+  .page {
+    padding-top: 28px;
+    padding-bottom: 36px;
+  }
+}
