@@ -11,68 +11,70 @@
       <header class="header page__content">
         <img src="./images/logo.svg" class="header__logo" alt="Логотип страницы">
       </header>
-      <section class="profile page__content">
-        <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар пользователя">
-        <div class="profile__info">
-          <h1 class="profile__name">Жак-Ив Кусто</h1>
-          <button type="button" class="profile__edit-button"></button>
-          <p class="profile__description">Исследователь океана</p>
-        </div>
-        <button type="button" class="profile__add-button"></button>
-      </section>
-      <section class="elements page__content">
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_altay.jpg" alt="Алтай">
-          <div class="elements__group">
-            <h2 class="elements__title">Алтай</h2>
-            <button class="elements__like" type="button"></button>
+      <main class="content">
+        <section class="profile page__content">
+          <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар пользователя">
+          <div class="profile__info">
+            <h1 class="profile__name">Жак-Ив Кусто</h1>
+            <button type="button" class="profile__edit-button"></button>
+            <p class="profile__description">Исследователь океана</p>
           </div>
-        </div>
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_kabardino.jpeg" alt="Кабардино-Балкария">
-          <div class="elements__group">
-            <h2 class="elements__title">Кабардино-Балкария</h2>
-            <button class="elements__like" type="button"></button>
+          <button type="button" class="profile__add-button"></button>
+        </section>
+        <section class="elements page__content">
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_altay.jpg" alt="Алтай">
+            <div class="elements__group">
+              <h2 class="elements__title">Алтай</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
           </div>
-        </div>
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_kamchatka.jpeg" alt="Камчатка">
-          <div class="elements__group">
-            <h2 class="elements__title">Камчатка</h2>
-            <button class="elements__like" type="button"></button>
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_kabardino.jpeg" alt="Кабардино-Балкария">
+            <div class="elements__group">
+              <h2 class="elements__title">Кабардино-Балкария</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
           </div>
-        </div>
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_krasnodar.jpeg" alt="Краснодарский край">
-          <div class="elements__group">
-            <h2 class="elements__title">Краснодарский край</h2>
-            <button class="elements__like" type="button"></button>
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_kamchatka.jpeg" alt="Камчатка">
+            <div class="elements__group">
+              <h2 class="elements__title">Камчатка</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
           </div>
-        </div>
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_sheregesh.jpeg" alt="Шерегеш">
-          <div class="elements__group">
-            <h2 class="elements__title">Шерегеш</h2>
-            <button class="elements__like" type="button"></button>
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_krasnodar.jpeg" alt="Краснодарский край">
+            <div class="elements__group">
+              <h2 class="elements__title">Краснодарский край</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
           </div>
-        </div>
-        <div class="elements__element">
-          <img class="elements__picture" src="./images/elements__picture_ural.jpeg" alt="Урал">
-          <div class="elements__group">
-            <h2 class="elements__title">Уральские горы</h2>
-            <button class="elements__like" type="button"></button>
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_sheregesh.jpeg" alt="Шерегеш">
+            <div class="elements__group">
+              <h2 class="elements__title">Шерегеш</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
           </div>
-        </div>
-      </section>
+          <div class="elements__element">
+            <img class="elements__picture" src="./images/elements__picture_ural.jpeg" alt="Урал">
+            <div class="elements__group">
+              <h2 class="elements__title">Уральские горы</h2>
+              <button class="elements__like" type="button"></button>
+            </div>
+          </div>
+        </section>
+      </main>
       <footer class="footer page__content">
         <p class="footer__text">&#169; 2021 Mesto Russia</p>
       </footer>
       <section class="popup">
-        <form class="popup__container">
+        <form class="popup__container" name="popup-form">
           <h2 class="popup__title">Редактировать профиль</h2>
-          <input type="text" class="popup__name-of-author" value="">
-          <input type="text" class="popup__description-of-author">
-          <input type="submit" class="popup__submit" value="Сохранить">
+          <input type="text" class="popup__field" name="author-name" id="name">
+          <input type="text" class="popup__field" name="author-description" id="description">
+          <input type="submit" class="popup__submit" value="Сохранить" name="popup-submit">
           <button class="popup__close" type="button"></button>
         </form>
       </section>
