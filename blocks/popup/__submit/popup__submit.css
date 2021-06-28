@@ -16,6 +16,7 @@
   text-align: center;
   color: #FFFFFF;
   transition: opacity .3s linear;
+  cursor: pointer;
 }
 
 .popup__submit:hover {

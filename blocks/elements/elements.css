@@ -1,4 +1,5 @@
 .elements {
+  min-height: calc(100vh - 477px);
   max-width: 880px;
   display: grid;
   grid-template-columns: repeat(3, 282px);

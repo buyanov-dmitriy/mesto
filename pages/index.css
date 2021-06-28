@@ -5,6 +5,7 @@
 @import url(../blocks/header/header.css);
 @import url(../blocks/header/__logo/header__logo.css);
 @import url(../blocks/content/content.css);
+@import url(../blocks/popup-open/popup-open.css);
 @import url(../blocks/profile/profile.css);
 @import url(../blocks/profile/__avatar/profile__avatar.css);
 @import url(../blocks/profile/__info/profile__info.css);
@@ -13,12 +14,6 @@
 @import url(../blocks/profile/__description/profile__description.css);
 @import url(../blocks/profile/__add-button/profile__add-button.css);
 @import url(../blocks/elements/elements.css);
-@import url(../blocks/elements/__element/elements__element.css);
-@import url(../blocks/elements/__picture/elements__picture.css);
-@import url(../blocks/elements/__group/elements__group.css);
-@import url(../blocks/elements/__title/elements__title.css);
-@import url(../blocks/elements/__like/elements__like.css);
-@import url(../blocks/elements/__like/_active/elements__like_active.css);
 @import url(../blocks/footer/footer.css);
 @import url(../blocks/footer/__text/footer__text.css);
 @import url(../blocks/popup/popup.css);
@@ -28,3 +23,14 @@
 @import url(../blocks/popup/__field/popup__field.css);
 @import url(../blocks/popup/__submit/popup__submit.css);
 @import url(../blocks/popup/__close/popup__close.css);
+@import url(../blocks/popup/__open-card/popup__open-card.css);
+@import url(../blocks/popup/__picture/popup__picture.css);
+@import url(../blocks/popup/__image/popup__image.css);
+@import url(../blocks/popup/__caption/popup__caption.css);
+@import url(../blocks/element-template/__element/element-template__element.css);
+@import url(../blocks/element-template/__group/element-template__group.css);
+@import url(../blocks/element-template/__like/_active/element-template__like_active.css);
+@import url(../blocks/element-template/__like/element-template__like.css);
+@import url(../blocks/element-template/__picture/element-template__picture.css);
+@import url(../blocks/element-template/__title/element-template__title.css);
+@import url(../blocks/element-template/__trash/element-template__trash.css);

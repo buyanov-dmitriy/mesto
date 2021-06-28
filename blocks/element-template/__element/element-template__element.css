@@ -1,4 +1,4 @@
-.elements__element {
+.element-template__element {
   margin: 0;
   width: 100%;
   display: flex;
@@ -6,4 +6,5 @@
   background-color: #FFFFFF;
   border-radius: 10px;
   overflow: hidden;
+  position: relative;
 }

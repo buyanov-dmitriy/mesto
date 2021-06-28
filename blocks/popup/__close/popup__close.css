@@ -11,6 +11,7 @@
   right: -40px;
   transform: rotate(-45deg);
   transition: opacity .3s linear;
+  cursor: pointer;
 }
 
 .popup__close:hover {
@@ -23,5 +24,10 @@
     height: 26px;
     right: 5px;
     top: -45px;
+  }
+
+  #close-card.popup__close {
+    right: 0;
+    top: -36px;
   }
 }
