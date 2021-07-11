@@ -1,0 +1,17 @@
+.popup__section {
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 0;
+  min-height: 47px;
+  max-height: 62px;
+  margin-left: 36px;
+  max-width: 358px;
+  box-sizing: content-box;
+}
+
+@media screen and (max-width: 601px) {
+  .popup__section {
+    margin-left: 22px;
+    max-width: 238px;
+  }
+}
