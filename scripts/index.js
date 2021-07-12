@@ -6,15 +6,15 @@ function deleteElement(evt) {
 }
 
 function likeElement(evt) {
-  if (evt.target.classList.contains('element-template__like')) {
+  /*if (evt.target.classList.contains('element-template__like')) {
     evt.target.classList.toggle('element-template__like_active');
-  }
-  //evt.target.classList.toggle('element-template__like_active');
+  }*/
+  evt.target.classList.toggle('element-template__like_active');
 }
 
 function setEventListeners(elementTemplateClone) {
   elementTemplateClone.querySelector('.element-template__trash').addEventListener('click', deleteElement);
-  //elementTemplateClone.querySelector('.element-template__like').addEventListener('click', likeElement);
+  elementTemplateClone.querySelector('.element-template__like').addEventListener('click', likeElement);
   elementTemplateClone.querySelector('.element-template__open').addEventListener('click', openPopupViewCard);
 }
 
@@ -45,7 +45,7 @@ function createCard(element) {
 function renderElement(element, flag) {
   const renderedElement = createCard(element);
 
-  //setEventListeners(renderedElement);
+  setEventListeners(renderedElement);
 
   if (flag == "addedElement") {
     elements.prepend(renderedElement);
@@ -63,29 +63,43 @@ function renderElements(initialCards) {
 renderElements(initialCards);
 
 const buttonOpenViewEditor = document.querySelector('.profile__edit-button');
-const buttonCloseViewEditor = document.querySelector('#close-author');
+//const buttonCloseViewEditor = document.querySelector('#close-author');
 const popupViewEditor = document.querySelector('#popup-edit-author');
 const buttonAddNewCard = document.querySelector('.profile__add-button');
-const buttonCloseAddNewCard = document.querySelector('#close-add-card');
+//const buttonCloseAddNewCard = document.querySelector('#close-add-card');
 const popupNewCard = document.querySelector('#popup-add-card');
-const buttonCloseViewCard = document.querySelector('#close-card');
+//const buttonCloseViewCard = document.querySelector('#close-card');
 
-const setCloseListeners = popup => {
+/*document.addEventListener('click', function(evt) {
+  const popupOpened = document.querySelector('.popup_opened');
+
+  if (evt.target.classList.contains('popup')) {
+    closePopup(popupOpened);
+  }
+});*/
+
+const popups = document.querySelectorAll('.popup');
+
+popups.forEach(popup => {
   popup.addEventListener('click', function(evt) {
-    if (evt.target.classList.contains('popup')) {
+    if (evt.target.classList.contains('popup_opened') || evt.target.classList.contains('popup__close')) {
       closePopup(popup);
     }
-  });
-  document.addEventListener('keydown', function(evt) {
-    if (evt.key === 'Escape') {
-      closePopup(popup);
-    }
-  });
-}
+  })
+})
+
+const closeByEscape = (evt) => {
+  const popupOpened = document.querySelector('.popup_opened');
+
+  if (evt.key === "Escape") {
+    closePopup(popupOpened);
+  }
+};
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
-  setCloseListeners(popup);
+  //setCloseListeners(popup);
+  document.addEventListener("keydown", closeByEscape);
   /*popup.addEventListener('click', function(evt) {
     if (evt.target.classList.contains('popup')) {
       closePopup(popup);
@@ -100,32 +114,35 @@ function openPopup(popup) {
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
+  document.removeEventListener("keydown", closeByEscape);
+  //popup.querySelector('.popup__submit').classList.add('popup__button_disabled');
+  //popup.querySelector('.popup__submit').setAttribute('disabled', true);
 }
 
 const nameOfAuthor = document.querySelector('.profile__name');
 const descriptionOfAuthor = document.querySelector('.profile__description');
 const popupNameOfAuthor = popupViewEditor.querySelector('#name');
 const popupDescriptionOfAuthor = popupViewEditor.querySelector('#description');
-popupNameOfAuthor.value = nameOfAuthor.textContent;
-popupDescriptionOfAuthor.value = descriptionOfAuthor.textContent;
 
-/*function openPopupEditAuthor() {
+function openPopupEditAuthor() {
   popupNameOfAuthor.value = nameOfAuthor.textContent;
   popupDescriptionOfAuthor.value = descriptionOfAuthor.textContent;
-}*/
+}
 
 buttonOpenViewEditor.addEventListener('click', () => {
-  //openPopupEditAuthor();
+  popupViewEditor.querySelector('.popup__submit').removeAttribute('disabled');
+  popupViewEditor.querySelector('.popup__submit').classList.remove('popup__button_disabled');
+  openPopupEditAuthor();
   openPopup(popupViewEditor);
 });
 
 buttonAddNewCard.addEventListener('click', () => openPopup(popupNewCard));
 
-buttonCloseViewEditor.addEventListener('click', () => closePopup(popupViewEditor));
+//buttonCloseViewEditor.addEventListener('click', () => closePopup(popupViewEditor));
 
-buttonCloseAddNewCard.addEventListener('click', () => closePopup(popupNewCard));
+//buttonCloseAddNewCard.addEventListener('click', () => closePopup(popupNewCard));
 
-buttonCloseViewCard.addEventListener('click', () => closePopup(popupViewCard));
+//buttonCloseViewCard.addEventListener('click', () => closePopup(popupViewCard));
 
 const formEditAuthor = popupViewEditor.querySelector('.popup__container');
 
@@ -158,7 +175,9 @@ function addNewCard(evt) {
   popupFormAddCard.reset();
 
   closePopup(popupNewCard);
+  popupNewCard.querySelector('.popup__submit').classList.add('popup__button_disabled');
+  popupNewCard.querySelector('.popup__submit').setAttribute('disabled', true);
 }
 
 popupFormAddCard.addEventListener('submit', addNewCard);
-elements.addEventListener('click', likeElement);
+//elements.addEventListener('click', likeElement);
