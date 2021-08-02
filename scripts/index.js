@@ -135,12 +135,6 @@ buttonOpenViewEditor.addEventListener('click', () => {
   openPopupEditAuthor();
   openPopup(popupViewEditor);
   validateForm(settings, popupViewEditor);
-  /*Хотя я, если честно, не вижу смысла деактивировать сразу кнопку,
-  потому что есть вероятность, что пользователь открыл форму (не обязательно конкретную),
-  чтобы проверить введенные данные, к тому же логически нет никакого противоречия:
-  форма не выдает ошибку, данные верные - зачем делать кнопку сразу же неактивной?*/
-  popupViewEditor.querySelector('.popup__submit').setAttribute('disabled', true);
-  popupViewEditor.querySelector('.popup__submit').classList.add('popup__button_disabled');
 });
 
 buttonAddNewCard.addEventListener('click', () => {
