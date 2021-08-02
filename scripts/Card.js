@@ -1,15 +1,15 @@
-import openPopup from './index.js';
-
 export default class Card {
   _name;
   _link;
   _cardSelector;
   _element;
+  _handleCardClick;
 
-  constructor(initialCard, cardSelector) {
+  constructor(initialCard, cardSelector, handleCardClick) {
     this._name = initialCard.name;
     this._link = initialCard.link;
     this._cardSelector = cardSelector;
+    this._handleCardClick = handleCardClick;
   };
 
   _getTemplate() {
@@ -29,29 +29,26 @@ export default class Card {
     evt.target.classList.toggle('element-template__like_active');
   };
 
-  _openCard(evt) {
-    const popupViewCard = document.querySelector('#popup-view-card');
-    const imageViewCard = popupViewCard.querySelector('.popup__image');
-    const captionViewcard = popupViewCard.querySelector('.popup__caption');
-
-    imageViewCard.src = evt.target.src;
-    imageViewCard.alt = evt.target.alt;
-    captionViewcard.textContent = evt.target.alt;
-    openPopup(popupViewCard);
-  }
-
   _setEventListeners() {
-    this._element.querySelector('.element-template__trash').addEventListener('click', this._deleteCard);
-    this._element.querySelector('.element-template__like').addEventListener('click', this._likeCard);
-    this._element.querySelector('.element-template__open').addEventListener('click', this._openCard);
+    this._deleteButton.addEventListener('click', this._deleteCard);
+    this._likeButton.addEventListener('click', this._likeCard);
+    this._openButton.addEventListener('click', () => {
+      this._handleCardClick(this._name, this._link);
+    });
   };
 
   generateCard() {
     this._element = this._getTemplate();
+    this._cardImage = this._element.querySelector('.element-template__picture');
+    this._cardTitle =  this._element.querySelector('.element-template__title');
+    this._deleteButton = this._element.querySelector('.element-template__trash');
+    this._likeButton = this._element.querySelector('.element-template__like');
+    this._openButton =  this._element.querySelector('.element-template__open');
+
     this._setEventListeners();
-    this._element.querySelector('.element-template__picture').src = this._link;
-    this._element.querySelector('.element-template__picture').alt = this._name;
-    this._element.querySelector('.element-template__title').textContent = this._name;
+    this._cardImage.src = this._link;
+    this._cardImage.alt = this._name;
+    this._cardTitle.textContent = this._name;
 
     return this._element;
   };

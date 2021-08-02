@@ -36,8 +36,8 @@ const settings = {
   inputSection: '.popup__section',
   inputErrorText: '.popup__error',
 };
+const cardTable = document.querySelector('.elements');
 const formSelector = '.popup__container';
-const formList = Array.from(document.querySelectorAll(formSelector));
 const buttonOpenViewEditor = document.querySelector('.profile__edit-button');
 const popupViewEditor = document.querySelector('#popup-edit-author');
 const buttonAddNewCard = document.querySelector('.profile__add-button');
@@ -51,6 +51,9 @@ const formEditAuthor = popupViewEditor.querySelector('.popup__container');
 const popupFormAddCard = popupNewCard.querySelector('.popup__container');
 const popupAddCardPlace = popupFormAddCard.querySelector('#place');
 const popupAddCardLink = popupFormAddCard.querySelector('#link');
+const popupViewCard = document.querySelector('#popup-view-card');
+const imageViewCard = popupViewCard.querySelector('.popup__image');
+const captionViewcard = popupViewCard.querySelector('.popup__caption');
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
@@ -58,14 +61,13 @@ function closePopup(popup) {
 }
 
 function closeByEscape(evt) {
-  const popupOpened = document.querySelector('.popup_opened');
-
   if (evt.key === "Escape") {
+    const popupOpened = document.querySelector('.popup_opened');
     closePopup(popupOpened);
   }
 };
 
-export default function openPopup(popup) {
+function openPopup(popup) {
   popup.classList.add('popup_opened');
   document.addEventListener("keydown", closeByEscape);
 }
@@ -84,7 +86,7 @@ function formSubmitHandler(evt) {
 }
 
 function createCard(item, cardSelector) {
-  const card = new Card(item, cardSelector);
+  const card = new Card(item, cardSelector, handleCardClick);
   const cardElement = card.generateCard();
 
   return cardElement;
@@ -98,17 +100,27 @@ function addNewCard(evt) {
   newItemToArray.name = popupAddCardPlace.value;
   newItemToArray.link = popupAddCardLink.value;
 
-  document.querySelector('.elements').prepend(createCard(newItemToArray, '.element-template'));
+  cardTable.prepend(createCard(newItemToArray, '.element-template'));
 
   popupFormAddCard.reset();
 
   closePopup(popupNewCard);
-  popupNewCard.querySelector('.popup__submit').classList.add('popup__button_disabled');
-  popupNewCard.querySelector('.popup__submit').setAttribute('disabled', true);
+}
+
+function handleCardClick(name, link) {
+  imageViewCard.src = link;
+  imageViewCard.alt = name;
+  captionViewcard.textContent = name;
+  openPopup(popupViewCard);
+}
+
+function validateForm(settings, popup) {
+  const formElement = new FormValidator(settings, popup);
+  formElement.enableValidation();
 }
 
 initialCards.forEach((item) => {
-  document.querySelector('.elements').append(createCard(item, '.element-template'));
+  cardTable.append(createCard(item, '.element-template'));
 })
 
 popups.forEach(popup => {
@@ -120,19 +132,23 @@ popups.forEach(popup => {
 })
 
 buttonOpenViewEditor.addEventListener('click', () => {
-  popupViewEditor.querySelector('.popup__submit').removeAttribute('disabled');
-  popupViewEditor.querySelector('.popup__submit').classList.remove('popup__button_disabled');
   openPopupEditAuthor();
   openPopup(popupViewEditor);
+  validateForm(settings, popupViewEditor);
+  /*Хотя я, если честно, не вижу смысла деактивировать сразу кнопку,
+  потому что есть вероятность, что пользователь открыл форму (не обязательно конкретную),
+  чтобы проверить введенные данные, к тому же логически нет никакого противоречия:
+  форма не выдает ошибку, данные верные - зачем делать кнопку сразу же неактивной?*/
+  popupViewEditor.querySelector('.popup__submit').setAttribute('disabled', true);
+  popupViewEditor.querySelector('.popup__submit').classList.add('popup__button_disabled');
 });
 
-buttonAddNewCard.addEventListener('click', () => openPopup(popupNewCard));
+buttonAddNewCard.addEventListener('click', () => {
+  openPopup(popupNewCard);
+  validateForm(settings, popupNewCard);
+  popupFormAddCard.reset();
+});
 
 formEditAuthor.addEventListener('submit', formSubmitHandler);
 
 popupFormAddCard.addEventListener('submit', addNewCard);
-
-formList.forEach(formItem => {
-  const formElement = new FormValidator(settings, formItem);
-  formElement.enableValidation();
-})
