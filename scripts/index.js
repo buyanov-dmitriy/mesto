@@ -37,7 +37,6 @@ const settings = {
   inputErrorText: '.popup__error',
 };
 const cardTable = document.querySelector('.elements');
-const formSelector = '.popup__container';
 const buttonOpenViewEditor = document.querySelector('.profile__edit-button');
 const popupViewEditor = document.querySelector('#popup-edit-author');
 const buttonAddNewCard = document.querySelector('.profile__add-button');
@@ -48,7 +47,9 @@ const descriptionOfAuthor = document.querySelector('.profile__description');
 const popupNameOfAuthor = popupViewEditor.querySelector('#name');
 const popupDescriptionOfAuthor = popupViewEditor.querySelector('#description');
 const formEditAuthor = popupViewEditor.querySelector('.popup__container');
+const formEditAuthorValidator = new FormValidator(settings, formEditAuthor);
 const popupFormAddCard = popupNewCard.querySelector('.popup__container');
+const popupFormAddCardValidator = new FormValidator(settings, popupFormAddCard);
 const popupAddCardPlace = popupFormAddCard.querySelector('#place');
 const popupAddCardLink = popupFormAddCard.querySelector('#link');
 const popupViewCard = document.querySelector('#popup-view-card');
@@ -101,8 +102,8 @@ function addNewCard(evt) {
   newItemToArray.link = popupAddCardLink.value;
 
   cardTable.prepend(createCard(newItemToArray, '.element-template'));
-
   popupFormAddCard.reset();
+  popupFormAddCardValidator.resetValidation();
 
   closePopup(popupNewCard);
 }
@@ -114,10 +115,7 @@ function handleCardClick(name, link) {
   openPopup(popupViewCard);
 }
 
-function validateForm(settings, popup) {
-  const formElement = new FormValidator(settings, popup);
-  formElement.enableValidation();
-}
+
 
 initialCards.forEach((item) => {
   cardTable.append(createCard(item, '.element-template'));
@@ -134,15 +132,18 @@ popups.forEach(popup => {
 buttonOpenViewEditor.addEventListener('click', () => {
   openPopupEditAuthor();
   openPopup(popupViewEditor);
-  validateForm(settings, popupViewEditor);
+  formEditAuthorValidator.resetValidation();
 });
 
 buttonAddNewCard.addEventListener('click', () => {
   openPopup(popupNewCard);
-  validateForm(settings, popupNewCard);
-  popupFormAddCard.reset();
+  //popupFormAddCard.reset();
+  //popupFormAddCardValidator.resetValidation();
 });
 
 formEditAuthor.addEventListener('submit', formSubmitHandler);
 
 popupFormAddCard.addEventListener('submit', addNewCard);
+
+formEditAuthorValidator.enableValidation();
+popupFormAddCardValidator.enableValidation();
