@@ -3,17 +3,16 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./pages/index.css">
     <title>Красивые места России</title>
   </head>
   <body>
     <div class="page">
       <header class="header page__content">
-        <img src="./images/logo.svg" class="header__logo" alt="Логотип страницы">
+        <img src="<%=require('./images/logo.svg')%>" class="header__logo" alt="Логотип страницы">
       </header>
       <main class="content">
         <section class="profile page__content">
-          <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар пользователя">
+          <img class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="Аватар пользователя">
           <div class="profile__info">
             <h1 class="profile__name">Жак-Ив Кусто</h1>
             <button type="button" class="popup-open profile__edit-button"></button>
@@ -27,7 +26,7 @@
       <footer class="footer page__content">
         <p class="footer__text">&#169; 2021 Mesto Russia</p>
       </footer>
-      <section class="popup" id="popup-edit-author">
+      <section class="popup popup-edit-author" id="popup-edit-author">
         <form class="popup__container" name="popup-form" id="form-close-author" novalidate>
           <h2 class="popup__title">Редактировать профиль</h2>
           <section class="popup__section">
@@ -42,7 +41,7 @@
           <button class="popup__close" id="close-author" type="button"></button>
         </form>
       </section>
-      <section class="popup" id="popup-add-card">
+      <section class="popup popup-add-card" id="popup-add-card">
         <form class="popup__container" name="popup-form-card" id="form-add-card" novalidate>
           <h2 class="popup__title">Новое место</h2>
           <section class="popup__section">
@@ -57,7 +56,7 @@
           <button class="popup__close" id="close-add-card" type="button"></button>
         </form>
       </section>
-      <section class="popup" id="popup-view-card">
+      <section class="popup popup-view-card" id="popup-view-card">
         <div class="popup__open-card">
           <figure class="popup__picture">
             <img class="popup__image" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Архыз">
@@ -77,6 +76,5 @@
         </div>
       </div>
     </template>
-    <script type="module" src="./scripts/index.js"></script>
   </body>
 </html>
