@@ -1,10 +1,10 @@
-import '../pages/index.css';
-import Card from './Card.js';
-import FormValidator from './FormValidator.js';
-import Section from './Section.js';
-import PopupWithImage from './PopupWithImage.js';
-import PopupWithForm from './PopupWithForm.js';
-import UserInfo from './UserInfo.js';
+import './index.css';
+import Card from '../components/Card.js';
+import FormValidator from '../components/FormValidator.js';
+import Section from '../components/Section.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import UserInfo from '../components/UserInfo.js';
 
 const settings = {
   inputSelector: '.popup__field',
@@ -42,65 +42,64 @@ const initialCards = [
   }
 ];
 const cardList = new Section({
-  items: initialCards,
+  items: initialCards.reverse(),
   renderer: (item) => {
-    const card = new Card(item, '.element-template', handleCardClick);
-    const cardElement = card.generateCard();
-
-    cardList.addItem(cardElement, true);
+    cardList.addItem(createCard(item, '.element-template', '.element-template__element', handleCardClick));
   },
 },
 '.elements',
 );
 
-function createCard(item, cardSelector) {
-  const card = new Card(item, cardSelector, handleCardClick);
+function createCard(item, cardSelector, templateElement) {
+  const card = new Card(item, cardSelector, templateElement, handleCardClick);
   const cardElement = card.generateCard();
 
   return cardElement;
 }
 
+const popupViewCard = new PopupWithImage('.popup-view-card');
+
 function handleCardClick(name, link) {
-  const popupViewCard = new PopupWithImage('.popup-view-card', name, link);
   popupViewCard.setEventListeners();
-  popupViewCard.open();
+  popupViewCard.open(name, link);
 }
 
 cardList.renderItems();
 
-const formAuthor = document.querySelector('#form-close-author')
+
+const formAuthor = document.querySelector('#form-edit-author')
 const formEditAuthorValidator = new FormValidator(settings, formAuthor);
 const formAddCard = document.querySelector('#form-add-card');
 const popupFormAddCardValidator = new FormValidator(settings, formAddCard);
 formEditAuthorValidator.enableValidation();
 popupFormAddCardValidator.enableValidation();
 
-const newUser = new UserInfo(['.profile__name', '.profile__description']);
-function formSubmitHandler(evt, inputValues) {
-  newUser.setUserInfo(inputValues);
+const newUser = new UserInfo({ name: '.profile__name', description: '.profile__description' });
+function formSubmitHandler(inputValuesObject) {
+  newUser.setUserInfo(inputValuesObject);
   popupViewEditor.close();
 }
 const popupViewEditor = new PopupWithForm('.popup-edit-author', formSubmitHandler);
 popupViewEditor.setEventListeners();
 const buttonOpenViewEditor = document.querySelector('.profile__edit-button');
+const nameOfAuthorField = document.querySelector('.popup-edit-author').querySelector('#name');
+const descriptionOfAuthorField = document.querySelector('.popup-edit-author').querySelector('#description');
 buttonOpenViewEditor.addEventListener('click', () => {
-  newUser.getUserInfo();
+  const userInfo = newUser.getUserInfo();
+  nameOfAuthorField.value = userInfo.name;
+  descriptionOfAuthorField.value = userInfo.description;
   popupViewEditor.open();
   formEditAuthorValidator.resetValidation();
 });
 
-function addNewCard(evt, inputValues) {
-  const newItemToArray = {
-      name: '',
-      link: '',
+function addNewCard(inputValuesObject) {
+  const newItem = {
+      name: inputValuesObject.place,
+      link: inputValuesObject.link,
     };
-  newItemToArray.name = inputValues[0].value;
-  newItemToArray.link = inputValues[1].value;
 
-  const newCard = createCard(newItemToArray, '.element-template');
-  cardList.addItem(newCard, false);
-
-  popupFormAddCardValidator.resetValidation();
+  const newCard = createCard(newItem, '.element-template', '.element-template__element');
+  cardList.addItem(newCard);
 
   popupNewCard.close();
 }

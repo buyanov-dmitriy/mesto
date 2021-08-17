@@ -1,14 +1,9 @@
 export default class Card {
-  _name;
-  _link;
-  _cardSelector;
-  _element;
-  _handleCardClick;
-
-  constructor(initialCard, cardSelector, handleCardClick) {
+  constructor(initialCard, cardSelector, templateElement, handleCardClick) {
     this._name = initialCard.name;
     this._link = initialCard.link;
     this._cardSelector = cardSelector;
+    this._templateElement = templateElement;
     this._handleCardClick = handleCardClick;
   };
 
@@ -16,22 +11,24 @@ export default class Card {
     const cardElement = document
       .querySelector(this._cardSelector)
       .content
+      .querySelector(this._templateElement)
       .cloneNode('true');
 
     return cardElement;
   };
 
-  _deleteCard(evt) {
-    evt.target.closest('.element-template__element').remove();
+  _deleteCard() {
+    this._element.remove();
+    this._element = '';
   };
 
   _likeCard(evt) {
-    evt.target.classList.toggle('element-template__like_active');
+    this._likeButton.classList.toggle('element-template__like_active');
   };
 
   _setEventListeners() {
-    this._deleteButton.addEventListener('click', this._deleteCard);
-    this._likeButton.addEventListener('click', this._likeCard);
+    this._deleteButton.addEventListener('click', () => this._deleteCard());
+    this._likeButton.addEventListener('click', () => this._likeCard());
     this._openButton.addEventListener('click', () => {
       this._handleCardClick(this._name, this._link);
     });
