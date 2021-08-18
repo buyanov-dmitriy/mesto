@@ -41,26 +41,31 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ];
+
+function addCardToPage(card) {
+  const newCard = createCard(card, '.element-template', '.element-template__element');
+  cardList.addItem(newCard);
+}
+
 const cardList = new Section({
   items: initialCards.reverse(),
   renderer: (item) => {
-    cardList.addItem(createCard(item, '.element-template', '.element-template__element', handleCardClick));
+    addCardToPage(item)
   },
 },
 '.elements',
 );
 
-function createCard(item, cardSelector, templateElement) {
-  const card = new Card(item, cardSelector, templateElement, handleCardClick);
+function createCard(item, templateSelector, cardSelector) {
+  const card = new Card(item, templateSelector, cardSelector, handleCardClick);
   const cardElement = card.generateCard();
 
   return cardElement;
 }
 
 const popupViewCard = new PopupWithImage('.popup-view-card');
-
+popupViewCard.setEventListeners();
 function handleCardClick(name, link) {
-  popupViewCard.setEventListeners();
   popupViewCard.open(name, link);
 }
 
@@ -98,8 +103,7 @@ function addNewCard(inputValuesObject) {
       link: inputValuesObject.link,
     };
 
-  const newCard = createCard(newItem, '.element-template', '.element-template__element');
-  cardList.addItem(newCard);
+  addCardToPage(newItem);
 
   popupNewCard.close();
 }
