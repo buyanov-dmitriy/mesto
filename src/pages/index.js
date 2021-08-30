@@ -5,6 +5,56 @@ import Section from '../components/Section.js';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import UserInfo from '../components/UserInfo.js';
+import { Api } from '../components/Api';
+import Popup from '../components/Popup';
+
+const myOwnerId = '0acc3ecde12f245e764f8153';
+const user = {
+  avatar: document.querySelector('.profile__avatar'),
+}
+const api = new Api({
+  url: 'https://nomoreparties.co/v1/cohort-27',
+  headers: {
+    'authorization': '49889f34-1928-497a-a94e-146b8fe6d002',
+    'Content-Type': 'application/json',
+  },
+});
+
+api
+  .getUserInformation()
+  .then(data => {
+    newUser.setUserInfo({
+      name: data.name,
+      description: data.about,
+    })
+    user.avatar.src = data.avatar;
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+let cardList = new Section({
+  items: [],
+  renderer: (item) => {
+    addCardToPage(item, cardList)
+  },
+},
+'.elements',
+);
+
+api
+  .getCards()
+  .then(data => {
+    cardList = new Section({
+      items: data.reverse(),
+      renderer: (item) => {
+        addCardToPage(item)
+      },
+    },
+    '.elements',
+    );
+    cardList.renderItems();
+  })
 
 const settings = {
   inputSelector: '.popup__field',
@@ -15,49 +65,22 @@ const settings = {
   inputSection: '.popup__section',
   inputErrorText: '.popup__error',
 };
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
 
 function addCardToPage(card) {
   const newCard = createCard(card, '.element-template', '.element-template__element');
   cardList.addItem(newCard);
 }
 
-const cardList = new Section({
-  items: initialCards.reverse(),
-  renderer: (item) => {
-    addCardToPage(item)
-  },
-},
-'.elements',
-);
-
 function createCard(item, templateSelector, cardSelector) {
-  const card = new Card(item, templateSelector, cardSelector, handleCardClick);
+  const card = new Card(
+    item,
+    templateSelector,
+    cardSelector,
+    handleCardClick,
+    openConfirmationPopup,
+    myOwnerId,
+    putLike,
+    );
   const cardElement = card.generateCard();
 
   return cardElement;
@@ -69,10 +92,8 @@ function handleCardClick(name, link) {
   popupViewCard.open(name, link);
 }
 
-cardList.renderItems();
 
-
-const formAuthor = document.querySelector('#form-edit-author')
+const formAuthor = document.querySelector('#form-edit-author');
 const formEditAuthorValidator = new FormValidator(settings, formAuthor);
 const formAddCard = document.querySelector('#form-add-card');
 const popupFormAddCardValidator = new FormValidator(settings, formAddCard);
@@ -81,8 +102,18 @@ popupFormAddCardValidator.enableValidation();
 
 const newUser = new UserInfo({ name: '.profile__name', description: '.profile__description' });
 function formSubmitHandler(inputValuesObject) {
-  newUser.setUserInfo(inputValuesObject);
-  popupViewEditor.close();
+  return api
+    .editProfile({
+      name: inputValuesObject.name,
+      about: inputValuesObject.description,
+    })
+      .then(data => {
+        newUser.setUserInfo({
+          name: data.name,
+          description: data.about,
+        });;
+        popupViewEditor.close();
+      })
 }
 const popupViewEditor = new PopupWithForm('.popup-edit-author', formSubmitHandler);
 popupViewEditor.setEventListeners();
@@ -102,10 +133,12 @@ function addNewCard(inputValuesObject) {
       name: inputValuesObject.place,
       link: inputValuesObject.link,
     };
-
-  addCardToPage(newItem);
-
-  popupNewCard.close();
+  return api
+    .addNewCardToServer(newItem)
+      .then(data => {
+        addCardToPage(data);
+        popupNewCard.close();
+      });
 }
 const popupNewCard = new PopupWithForm('.popup-add-card', addNewCard);
 popupNewCard.setEventListeners();
@@ -114,3 +147,52 @@ buttonAddNewCard.addEventListener('click', () => {
   popupFormAddCardValidator.resetValidation();
   popupNewCard.open();
 });
+
+
+function openConfirmationPopup(element, card) {
+  popupConfirmationDelete.open();
+  buttonConfirmationDelete.addEventListener('click', function() {
+    api
+      .deleteCardFromServer(card._id)
+        .then(() => {
+          toolCard.deleteCard(element);
+          popupConfirmationDelete.close();
+        })
+  });
+}
+const popupConfirmationDelete = new Popup('.popup-confirmation-delete');
+popupConfirmationDelete.setEventListeners();
+const formConfirmationDelete = document.querySelector('#popup__confirm-delete');
+const buttonConfirmationDelete = document.querySelector('.popup__confirm-delete-button');
+const toolCard = new Card({}, '', '', handleCardClick, openConfirmationPopup, myOwnerId, putLike);
+
+function putLike(element, card) {
+  let isNotLiked = true;
+  if (element.querySelector('.element-template__like').classList.contains('element-template__like_active')) {
+    isNotLiked = false;
+  }
+  api
+    .putLike(card, isNotLiked)
+      .then(data => {
+        toolCard.likeCard(element, data.likes.length)
+      });
+}
+
+function addNewAvatar(inputValuesObject) {
+  return api
+    .updateAvatar(inputValuesObject)
+    .then(data => {
+      user.avatar.src = data.avatar;
+      popupNewAvatar.close();
+    })
+}
+const buttonChangeAvatar = document.querySelector('.profile__avatar-overlay')
+const popupNewAvatar = new PopupWithForm('.popup-new-avatar', addNewAvatar);
+const formNewAvatar = document.querySelector('#popup-new-avatar');
+const formNewAvatarValidator = new FormValidator(settings, formNewAvatar);
+formNewAvatarValidator.enableValidation();
+popupNewAvatar.setEventListeners();
+buttonChangeAvatar.addEventListener('click', () => {
+  popupNewAvatar.open();
+  formNewAvatarValidator.resetValidation();
+})

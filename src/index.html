@@ -8,15 +8,16 @@
   <body>
     <div class="page">
       <header class="header page__content">
-        <img src="<%=require('./images/logo.svg')%>" class="header__logo" alt="Логотип страницы">
+        <img src="<%=require('./images/logo.svg')%>" alt="Логотип страницы" class="header__logo">
       </header>
       <main class="content">
         <section class="profile page__content">
-          <img class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="Аватар пользователя">
+          <img class="profile__avatar" src="" alt="Аватар пользователя">
+          <button type="button" class="profile__avatar-overlay"></button>
           <div class="profile__info">
-            <h1 class="profile__name">Жак-Ив Кусто</h1>
+            <h1 class="profile__name"></h1>
             <button type="button" class="popup-open profile__edit-button"></button>
-            <p class="profile__description">Исследователь океана</p>
+            <p class="profile__description"></p>
           </div>
           <button type="button" class="popup-open profile__add-button"></button>
         </section>
@@ -65,7 +66,25 @@
           <button class="popup__close" id="close-card" type="button"></button>
         </div>
       </section>
+      <section class="popup popup-confirmation-delete" id="popup-confirm-delete">
+        <div class="popup__container popup__confirm-delete" id="popup__confirm-delete">
+          <p class="popup__confirm-delete-text">Вы уверены?</p>
+          <button type="button" class="popup__submit popup__confirm-delete-button" name="popup-submit">Да</button>
+          <button class="popup__close" id="close-confirm-delete" type="button"></button>
+        </div>
+      </section>
     </div>
+    <section class="popup popup-new-avatar" id="popup-new-avatar">
+      <form class="popup__container popup__new-avatar" name="popup-new-avatar" id="popup-new-avatar" novalidate>
+        <h2 class="popup__title">Обновить аватар</h2>
+        <section class="popup__section">
+          <input type="url" class="popup__field" name="avatar" id="avatar" placeholder="Ссылка на аватар" required>
+          <span class="popup__error link-error"></span>
+        </section>
+        <input type="submit" class="popup__submit" value="Создать" name="popup-submit">
+        <button class="popup__close" id="close-add-card" type="button"></button>
+      </form>
+    </section>
     <template class="element-template">
       <div class="element-template__element">
         <button class="popup-open element-template__open" id="open-card" type="button"><img class="element-template__picture" src="https://" alt=""></button>
@@ -73,6 +92,7 @@
         <div class="element-template__group">
           <h2 class="element-template__title"></h2>
           <button class="element-template__like" type="button"></button>
+          <p class="element-template__like-count"></p>
         </div>
       </div>
     </template>

@@ -9,6 +9,7 @@
   width: 18px;
   height: 19px;
   transition: opacity .3s linear;
+  visibility: visible;
 }
 
 .element-template__trash:hover {

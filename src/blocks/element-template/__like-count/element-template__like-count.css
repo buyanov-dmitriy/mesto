@@ -1,0 +1,11 @@
+.element-template__like-count {
+  margin: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 16px;
+  color: #000000;
+  position: absolute;
+  right: 26px;
+  top: 44px;
+}

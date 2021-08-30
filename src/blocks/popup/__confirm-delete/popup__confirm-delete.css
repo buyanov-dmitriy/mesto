@@ -1,0 +1,12 @@
+.popup__confirm-delete{
+  max-height: 181px;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+@media screen and (max-width: 601px) {
+  .popup__confirm-delete {
+    max-height: 176px;
+  }
+}

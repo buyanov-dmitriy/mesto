@@ -16,7 +16,12 @@ export default class PopupWithForm extends Popup {
 
   setEventListeners() {
     this._form.addEventListener('submit', () => {
+      const buffer = this._form.querySelector('.popup__submit').value;
+      this._form.querySelector('.popup__submit').value = 'Сохранение...';
       this._submitForm(this._getInputValues())
+        .then(() => {
+          this._form.querySelector('.popup__submit').value = buffer;
+        });
     });
     super.setEventListeners();
   }
