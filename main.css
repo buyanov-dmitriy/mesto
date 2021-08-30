@@ -34,7 +34,7 @@
 .popup__error_visible{opacity:1}
 .popup__button_disabled{background:transparent;border:1px solid #000;color:#000;cursor:auto;opacity:.2}.popup__button_disabled:hover{opacity:.2}
 .popup__confirm-delete{align-items:center;gap:32px;justify-content:center;max-height:181px}@media screen and (max-width:601px){.popup__confirm-delete{max-height:176px}}
-.popup__confirm-delete-text{color:#000;font-size:24px;font-style:normal;font-weight:900;line-height:29px;margin:0;width:358px}@media screen and (max-width:601px){.popup__confirm-delete-text{font-size:18px;line-height:22px;margin-bottom:75px;margin-left:22px;max-width:238px}}
+.popup__confirm-delete-text{color:#000;font-size:24px;font-style:normal;font-weight:900;line-height:29px;margin:0;width:358px}@media screen and (max-width:601px){.popup__confirm-delete-text{font-size:18px;line-height:22px;margin-bottom:75px;margin-left:22px;max-width:238px;width:100%}}
 .popup__confirm-delete-button{margin-left:0;margin-top:0}
 .popup__new-avatar{max-height:272px}
 .element-template__element{background-color:#fff;border-radius:10px;display:flex;flex-direction:column;margin:0;overflow:hidden;position:relative;width:100%}
