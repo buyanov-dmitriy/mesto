@@ -7,3 +7,12 @@
   color: #000000;
   width: 358px;
 }
+
+@media screen and (max-width: 601px) {
+  .popup__confirm-delete-text {
+    width: 100%;
+    font-size: 18px;
+    line-height: 22px;
+    max-width: 238px;
+  }
+}
