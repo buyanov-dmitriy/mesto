@@ -38,18 +38,14 @@ export default class Card {
     element = '';
   };
 
-  _likeHandler() {
-
-  }
-
   likeCard(element, likes) {
     element.querySelector('.element-template__like-count').textContent = likes;
     element.querySelector('.element-template__like').classList.toggle('element-template__like_active');
   };
 
   _setEventListeners() {
-    this._deleteButton.addEventListener('click', () => this._openConfirmationPopup(this._element, this._initialCard));
-    this._likeButton.addEventListener('click', () => this._putLike(this._element, this._initialCard));
+    this._deleteButton.addEventListener('click', () => this._openConfirmationPopup(this, this._element, this._initialCard));
+    this._likeButton.addEventListener('click', () => this._putLike(this, this._element, this._initialCard));
     this._openButton.addEventListener('click', () => {
       this._handleCardClick(this._name, this._link);
     });

@@ -6,12 +6,15 @@ import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import UserInfo from '../components/UserInfo.js';
 import { Api } from '../components/Api';
-import Popup from '../components/Popup';
+import { settings } from '../utils/constants';
+import { PopupWithConfirmation } from '../components/PopupWithConfirmation';
 
-const myOwnerId = '0acc3ecde12f245e764f8153';
-const user = {
-  avatar: document.querySelector('.profile__avatar'),
+function catchError(error) {
+  console.log(error);
 }
+
+let userId;
+
 const api = new Api({
   url: 'https://nomoreparties.co/v1/cohort-27',
   headers: {
@@ -20,21 +23,9 @@ const api = new Api({
   },
 });
 
-api
-  .getUserInformation()
-  .then(data => {
-    newUser.setUserInfo({
-      name: data.name,
-      description: data.about,
-    })
-    user.avatar.src = data.avatar;
-  })
-  .catch(error => {
-    console.log(error);
-  });
+const newUser = new UserInfo({ nameSelector: '.profile__name', descriptionSelector: '.profile__description', avatarSelector: '.profile__avatar' });
 
-let cardList = new Section({
-  items: [],
+const cardList = new Section({
   renderer: (item) => {
     addCardToPage(item, cardList)
   },
@@ -42,29 +33,18 @@ let cardList = new Section({
 '.elements',
 );
 
-api
-  .getCards()
-  .then(data => {
-    cardList = new Section({
-      items: data.reverse(),
-      renderer: (item) => {
-        addCardToPage(item)
-      },
-    },
-    '.elements',
-    );
-    cardList.renderItems();
+Promise.all([api.getUserInformation(), api.getCards()])
+  .then(([userInformation, cards]) => {
+    newUser.setUserInfo({
+      name: userInformation.name,
+      description: userInformation.about,
+      avatar: userInformation.avatar,
+      userId: userInformation._id,
+    });
+    userId = newUser.getUserInfo().userId;
+    cardList.renderItems(cards.reverse());
   })
-
-const settings = {
-  inputSelector: '.popup__field',
-  submitButtonSelector: '.popup__submit',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible',
-  inputSection: '.popup__section',
-  inputErrorText: '.popup__error',
-};
+  .catch(error => catchError(error));
 
 function addCardToPage(card) {
   const newCard = createCard(card, '.element-template', '.element-template__element');
@@ -78,7 +58,7 @@ function createCard(item, templateSelector, cardSelector) {
     cardSelector,
     handleCardClick,
     openConfirmationPopup,
-    myOwnerId,
+    userId,
     putLike,
     );
   const cardElement = card.generateCard();
@@ -92,7 +72,6 @@ function handleCardClick(name, link) {
   popupViewCard.open(name, link);
 }
 
-
 const formAuthor = document.querySelector('#form-edit-author');
 const formEditAuthorValidator = new FormValidator(settings, formAuthor);
 const formAddCard = document.querySelector('#form-add-card');
@@ -100,7 +79,6 @@ const popupFormAddCardValidator = new FormValidator(settings, formAddCard);
 formEditAuthorValidator.enableValidation();
 popupFormAddCardValidator.enableValidation();
 
-const newUser = new UserInfo({ name: '.profile__name', description: '.profile__description' });
 function formSubmitHandler(inputValuesObject) {
   return api
     .editProfile({
@@ -111,9 +89,12 @@ function formSubmitHandler(inputValuesObject) {
         newUser.setUserInfo({
           name: data.name,
           description: data.about,
+          avatar: data.avatar,
+          userId: data._id,
         });;
         popupViewEditor.close();
       })
+      .catch(error => catchError(error));
 }
 const popupViewEditor = new PopupWithForm('.popup-edit-author', formSubmitHandler);
 popupViewEditor.setEventListeners();
@@ -138,7 +119,8 @@ function addNewCard(inputValuesObject) {
       .then(data => {
         addCardToPage(data);
         popupNewCard.close();
-      });
+      })
+      .catch(error => catchError(error));
 }
 const popupNewCard = new PopupWithForm('.popup-add-card', addNewCard);
 popupNewCard.setEventListeners();
@@ -148,25 +130,24 @@ buttonAddNewCard.addEventListener('click', () => {
   popupNewCard.open();
 });
 
-
-function openConfirmationPopup(element, card) {
-  popupConfirmationDelete.open();
-  buttonConfirmationDelete.addEventListener('click', function() {
-    api
-      .deleteCardFromServer(card._id)
-        .then(() => {
-          toolCard.deleteCard(element);
-          popupConfirmationDelete.close();
-        })
-  });
+function openConfirmationPopup(cardInstance, element, card) {
+  popupConfirmationDelete.open(cardInstance, element, card);
 }
-const popupConfirmationDelete = new Popup('.popup-confirmation-delete');
-popupConfirmationDelete.setEventListeners();
-const formConfirmationDelete = document.querySelector('#popup__confirm-delete');
-const buttonConfirmationDelete = document.querySelector('.popup__confirm-delete-button');
-const toolCard = new Card({}, '', '', handleCardClick, openConfirmationPopup, myOwnerId, putLike);
 
-function putLike(element, card) {
+function deleteCard(cardInstance, element, card) {
+  api
+    .deleteCardFromServer(card._id)
+      .then(() => {
+        cardInstance.deleteCard(element);
+        popupConfirmationDelete.close();
+      })
+      .catch(error => catchError(error));
+}
+
+const popupConfirmationDelete = new PopupWithConfirmation('.popup-confirmation-delete', '.popup__confirm-delete-button', deleteCard);
+popupConfirmationDelete.setEventListeners();
+
+function putLike(cardInstance, element, card) {
   let isNotLiked = true;
   if (element.querySelector('.element-template__like').classList.contains('element-template__like_active')) {
     isNotLiked = false;
@@ -174,17 +155,24 @@ function putLike(element, card) {
   api
     .putLike(card, isNotLiked)
       .then(data => {
-        toolCard.likeCard(element, data.likes.length)
-      });
+        cardInstance.likeCard(element, data.likes.length)
+      })
+      .catch(error => catchError(error));
 }
 
 function addNewAvatar(inputValuesObject) {
   return api
     .updateAvatar(inputValuesObject)
     .then(data => {
-      user.avatar.src = data.avatar;
+      newUser.setUserInfo({
+        name: data.name,
+        description: data.about,
+        avatar: data.avatar,
+        userId: data._id,
+      });
       popupNewAvatar.close();
     })
+    .catch(error => catchError(error));
 }
 const buttonChangeAvatar = document.querySelector('.profile__avatar-overlay')
 const popupNewAvatar = new PopupWithForm('.popup-new-avatar', addNewAvatar);

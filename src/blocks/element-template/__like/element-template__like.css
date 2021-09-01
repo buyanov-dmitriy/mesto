@@ -7,6 +7,7 @@
   background-color: inherit;
   cursor: pointer;
   transition: opacity .3s linear;
+  background-repeat: no-repeat;
 }
 
 .element-template__like:hover {

@@ -12,9 +12,6 @@ export class Api {
         }
         return response.json();
       })
-      .catch(error => {
-        return console.log('Failed connection attempt!');
-      })
   }
 
   getUserInformation() {
